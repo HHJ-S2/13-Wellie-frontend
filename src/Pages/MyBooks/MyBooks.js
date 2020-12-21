@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
 import styled from "styled-components";
 import { AiOutlineSetting } from "react-icons/ai";
 import { BookList } from "./Components/BookList";
@@ -25,48 +26,61 @@ function MyBooks() {
   const [filterType, setFilterType] = useState("register");
 
   useEffect(() => {
-    fetch(`${API}/library`, {
-      headers: {
-        Authorization: TOKEN,
-      },
-    })
-      .then((res) => res.json())
+    axios
+      .get(`${API}/library`, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
       .then((res) => {
-        setMyBooksInfo(res.mybooksInfo);
+        setMyBooksInfo(res.data.mybooksInfo);
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
 
-    fetch(`${API}/library/mybook`, {
-      headers: {
-        Authorization: TOKEN,
-      },
-    })
-      .then((res) => res.json())
+    axios
+      .get(`${API}/library/mybook`, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
       .then((res) => {
-        setBookList(res);
-        setBookListSearch(res);
+        setBookList(res.data);
+        setBookListSearch(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
 
-    fetch(`${API}/library/shelf`, {
-      headers: {
-        Authorization: TOKEN,
-      },
-    })
-      .then((res) => res.json())
+    axios
+      .get(`${API}/library/shelf`, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
       .then((res) => {
-        setbookShelfListCard(res);
+        setbookShelfListCard(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
   }, []);
 
   const handleClickBookShelfList = (id) => {
-    fetch(`${API}/library/shelfdetail?shelf_id=${id}`, {
-      headers: {
-        Authorization: TOKEN,
-      },
-    })
-      .then((res) => res.json())
+    axios
+      .get(`${API}/library/shelfdetail?shelf_id=${id}`, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
       .then((res) => {
-        setBookShelfCase(res);
+        setBookShelfCase(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
+
     setIsOpen(true);
   };
 
@@ -82,37 +96,44 @@ function MyBooks() {
   };
 
   const handleClickBookShelfDelete = (id) => {
-    fetch(`${API}/library/shelf?shelf_id=${id}`, {
-      method: "delete",
-      headers: {
-        Authorization: TOKEN,
-      },
-    }).then((res) => {
-      if (res.status === 204) {
-        const newArray = [...bookShelfListCard.myBookShelfList];
-        const filterItem = newArray.filter((item) => item.id !== id);
+    axios
+      .delete(`${API}/library/shelf?shelf_id=${id}`, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
+      .then((res) => {
+        if (res.status === 204) {
+          const newArray = [...bookShelfListCard.myBookShelfList];
+          const filterItem = newArray.filter((item) => item.id !== id);
 
-        setbookShelfListCard({
-          bookShelfCount: (bookShelfListCard.bookShelfCount =
-            bookShelfListCard.bookShelfCount - 1),
-          myBookShelfList: filterItem,
-        });
-        alert("책장을 삭제했습니다.");
-      } else {
-        alert("책장 삭제를 실패했습니다.");
-      }
-    });
+          setbookShelfListCard({
+            bookShelfCount: (bookShelfListCard.bookShelfCount =
+              bookShelfListCard.bookShelfCount - 1),
+            myBookShelfList: filterItem,
+          });
+          alert("책장을 삭제했습니다.");
+        } else {
+          alert("책장 삭제를 실패했습니다.");
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
   };
 
   const handleClickBookListSort = () => {
-    fetch(`${API}/library/mybook?sort=${filterType}&read=${filterRead}`, {
-      headers: {
-        Authorization: TOKEN,
-      },
-    })
-      .then((res) => res.json())
+    axios
+      .get(`${API}/library/mybook?sort=${filterType}&read=${filterRead}`, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
       .then((res) => {
-        setBookList(res);
+        setBookList(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
       });
   };
 
@@ -157,7 +178,7 @@ function MyBooks() {
         <UserInfo>
           <UserProfile>
             <div>
-              <img src={myBooksInfo?.profile} alt="유저 기본 아이콘" />
+              <img src="./images/MyBooks/user.png" alt="유저 기본 아이콘" />
             </div>
             <MyBookName>{myBooksInfo?.myBooksName}</MyBookName>
             <UserName>{myBooksInfo?.userName}</UserName>
