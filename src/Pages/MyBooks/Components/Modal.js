@@ -56,8 +56,8 @@ const ModalContainer = styled.div`
 const Inner = styled.div`
   position: relative;
   height: 560px;
-  margin-top: 50px;
-  padding: 30px 30px 30px 20px;
+  margin-top: 70px;
+  padding: 10px 30px;
   overflow-y: scroll;
 `;
 
