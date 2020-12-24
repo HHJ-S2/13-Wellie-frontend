@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 import styled from "styled-components";
 import { API, TOKEN } from "../../config";
 
@@ -12,27 +13,39 @@ function MyBooksManager(props) {
   const [saveItem, setSaverItem] = useState([]);
 
   useEffect(() => {
+    stateCheck();
+  }, []);
+
+  const stateCheck = async () => {
     !history.location.state
-      ? fetch(`${API}/library/mybook`, {
-          headers: {
-            Authorization: TOKEN,
-          },
-        })
-          .then((res) => res.json())
-          .then((res) => setBookList(res))
-      : fetch(
-          `${API}/library/shelfdetail?shelf_id=${history.location.state.id}`,
-          {
+      ? await axios
+          .get(`${API}/library/mybook`, {
             headers: {
               Authorization: TOKEN,
             },
-          }
-        )
-          .then((res) => res.json())
+          })
           .then((res) => {
-            setBookShelfList(res.bookShelfCase);
+            setBookList(res.data);
+          })
+          .catch((err) => {
+            console.log(err.response);
+          })
+      : await axios
+          .get(
+            `${API}/library/shelfdetail?shelf_id=${history.location.state.id}`,
+            {
+              headers: {
+                Authorization: TOKEN,
+              },
+            }
+          )
+          .then((res) => {
+            setBookShelfList(res.data.bookShelfCase);
+          })
+          .catch((err) => {
+            console.log(err.response);
           });
-  }, []);
+  };
 
   const handleChangeBookShelfNameInput = (e) => {
     const { value } = e.target;
@@ -56,20 +69,25 @@ function MyBooksManager(props) {
     } else if (!checkBookList.length) {
       alert("도서를 선택해주세요.");
     } else {
-      fetch(`${API}/library/shelfdetail`, {
-        method: "post",
-        headers: {
-          Authorization: TOKEN,
-        },
-        body: JSON.stringify({
-          booklist: checkBookList,
-          shelfname: bookShelfInput,
-        }),
-      })
-        .then((res) => res.json())
+      axios
+        .post(
+          `${API}/library/shelfdetail`,
+          {
+            booklist: checkBookList,
+            shelfname: bookShelfInput,
+          },
+          {
+            headers: {
+              Authorization: TOKEN,
+            },
+          }
+        )
         .then((res) => {
           alert("책장이 추가되었습니다.");
           history.push("/my_books");
+        })
+        .catch((err) => {
+          console.log(err.response);
         });
     }
   };
@@ -82,23 +100,46 @@ function MyBooksManager(props) {
     if (!bookShelfInput) {
       alert("서재명을 입력해주세요");
     } else {
-      fetch(`${API}/library/shelfdetail`, {
-        method: "patch",
-        headers: {
-          Authorization: TOKEN,
-        },
-        body: JSON.stringify({
-          shelf_id: history.location.state.id,
-          booklist: saveItem,
-          shelfname: bookShelfInput,
-        }),
-      })
-        .then((res) => res.json())
+      axios
+        .patch(
+          `${API}/library/shelfdetail`,
+          {
+            shelf_id: history.location.state.id,
+            booklist: saveItem,
+            shelfname: bookShelfInput,
+          },
+          {
+            headers: {
+              Authorization: TOKEN,
+            },
+          }
+        )
         .then((res) => {
           alert("책장이 수정되었습니다.");
           history.push("/my_books");
+        })
+        .catch((err) => {
+          console.log(err.response);
         });
     }
+
+    //   fetch(`${API}/library/shelfdetail`, {
+    //     method: "patch",
+    //     headers: {
+    //       Authorization: TOKEN,
+    //     },
+    //     body: JSON.stringify({
+    //       shelf_id: history.location.state.id,
+    //       booklist: saveItem,
+    //       shelfname: bookShelfInput,
+    //     }),
+    //   })
+    //     .then((res) => res.json())
+    //     .then((res) => {
+    //       alert("책장이 수정되었습니다.");
+    //       history.push("/my_books");
+    //     });
+    // }
   };
 
   const handleClickBookShelfDelete = () => {

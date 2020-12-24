@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { AiOutlineSetting } from "react-icons/ai";
 import { BookList } from "./Components/BookList";
 import { BookShelf } from "./Components/BookShelf";
-import { PostList } from "./Components/PostList";
-import { StatsList } from "./Components/StatsList";
 import { Modal } from "./Components/Modal";
 import { FilterModal } from "./Components/FilterModal";
 import { API, TOKEN, LIBRARY, DEFALT_MYBOOKS_BACKGROUND } from "../../config";
@@ -26,7 +24,11 @@ function MyBooks() {
   const [filterType, setFilterType] = useState("register");
 
   useEffect(() => {
-    axios
+    getData();
+  }, []);
+
+  const getData = async () => {
+    await axios
       .get(`${API}/library`, {
         headers: {
           Authorization: TOKEN,
@@ -39,7 +41,7 @@ function MyBooks() {
         console.log(err.response);
       });
 
-    axios
+    await axios
       .get(`${API}/library/mybook`, {
         headers: {
           Authorization: TOKEN,
@@ -53,7 +55,7 @@ function MyBooks() {
         console.log(err.response);
       });
 
-    axios
+    await axios
       .get(`${API}/library/shelf`, {
         headers: {
           Authorization: TOKEN,
@@ -65,10 +67,10 @@ function MyBooks() {
       .catch((err) => {
         console.log(err.response);
       });
-  }, []);
+  };
 
-  const handleClickBookShelfList = (id) => {
-    axios
+  const handleClickBookShelfList = async (id) => {
+    await axios
       .get(`${API}/library/shelfdetail?shelf_id=${id}`, {
         headers: {
           Authorization: TOKEN,
@@ -95,8 +97,8 @@ function MyBooks() {
     }
   };
 
-  const handleClickBookShelfDelete = (id) => {
-    axios
+  const handleClickBookShelfDelete = async (id) => {
+    await axios
       .delete(`${API}/library/shelf?shelf_id=${id}`, {
         headers: {
           Authorization: TOKEN,
@@ -122,8 +124,8 @@ function MyBooks() {
       });
   };
 
-  const handleClickBookListSort = () => {
-    axios
+  const handleClickBookListSort = async () => {
+    await axios
       .get(`${API}/library/mybook?sort=${filterType}&read=${filterRead}`, {
         headers: {
           Authorization: TOKEN,
@@ -155,8 +157,6 @@ function MyBooks() {
         setIsOpen={setIsOpen}
       />
     ),
-    2: <PostList />,
-    3: <StatsList />,
   };
 
   return (
@@ -201,7 +201,7 @@ function MyBooks() {
                 <b>밀리와 함께</b> 2일 6밀리
               </p>
               <Bar>
-                <span></span>
+                <span>filling</span>
                 <p>D-98 100밀리 목표</p>
               </Bar>
             </ProgressBar>
@@ -304,6 +304,7 @@ const Bar = styled.div`
     top: 0;
     bottom: 0;
     background: ${theme.yellow};
+    text-indent: -9999em;
     z-index: 10;
   }
 
