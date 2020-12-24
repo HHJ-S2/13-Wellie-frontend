@@ -26,7 +26,7 @@ const WellieMain = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${LOCALHOST}/data/dataOfMain.json`)
+    fetch(`${LOCALHOST}/data/Main/dataOfMain.json`)
       .then((res) => res.json())
       .then(
         (res) => {

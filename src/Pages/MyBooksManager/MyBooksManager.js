@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import styled from "styled-components";
-import { API, TOKEN } from "../../config";
+import { TOKEN, LIBRARY } from "../../config";
 
 function MyBooksManager(props) {
   const history = useHistory();
@@ -19,7 +19,7 @@ function MyBooksManager(props) {
   const stateCheck = async () => {
     !history.location.state
       ? await axios
-          .get(`${API}/library/mybook`, {
+          .get(`${LIBRARY}/mybook`, {
             headers: {
               Authorization: TOKEN,
             },
@@ -31,14 +31,11 @@ function MyBooksManager(props) {
             console.log(err.response);
           })
       : await axios
-          .get(
-            `${API}/library/shelfdetail?shelf_id=${history.location.state.id}`,
-            {
-              headers: {
-                Authorization: TOKEN,
-              },
-            }
-          )
+          .get(`${LIBRARY}/shelfdetail?shelf_id=${history.location.state.id}`, {
+            headers: {
+              Authorization: TOKEN,
+            },
+          })
           .then((res) => {
             setBookShelfList(res.data.bookShelfCase);
           })
@@ -71,7 +68,7 @@ function MyBooksManager(props) {
     } else {
       axios
         .post(
-          `${API}/library/shelfdetail`,
+          `${LIBRARY}/shelfdetail`,
           {
             booklist: checkBookList,
             shelfname: bookShelfInput,
@@ -102,7 +99,7 @@ function MyBooksManager(props) {
     } else {
       axios
         .patch(
-          `${API}/library/shelfdetail`,
+          `${LIBRARY}/shelfdetail`,
           {
             shelf_id: history.location.state.id,
             booklist: saveItem,
@@ -122,24 +119,6 @@ function MyBooksManager(props) {
           console.log(err.response);
         });
     }
-
-    //   fetch(`${API}/library/shelfdetail`, {
-    //     method: "patch",
-    //     headers: {
-    //       Authorization: TOKEN,
-    //     },
-    //     body: JSON.stringify({
-    //       shelf_id: history.location.state.id,
-    //       booklist: saveItem,
-    //       shelfname: bookShelfInput,
-    //     }),
-    //   })
-    //     .then((res) => res.json())
-    //     .then((res) => {
-    //       alert("책장이 수정되었습니다.");
-    //       history.push("/my_books");
-    //     });
-    // }
   };
 
   const handleClickBookShelfDelete = () => {

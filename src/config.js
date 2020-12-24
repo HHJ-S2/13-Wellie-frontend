@@ -1,9 +1,9 @@
 export const API = "http://172.31.34.118:8000";
 export const LOCALHOST = "http://localhost:3000";
+export const LIBRARY = "http://172.31.34.118:8000/library";
 export const BEAPIROOT = "http://172.31.34.118:8000";
 export const API_BOOK = "http://172.31.34.118:8000/book";
 export const API_SAVE_BOOK = "http://172.31.34.118:8000/library/mybook";
-export const LIBRARY = "http://172.31.34.118:8000";
 export const TOKEN = localStorage.getItem("Authorization");
 
 export const LIBRARY_MENU = [

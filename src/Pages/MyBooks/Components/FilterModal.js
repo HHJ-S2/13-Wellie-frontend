@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BOOKLIST_SORT } from "../../../config";
 import { GoSettings } from "react-icons/go";
 import { BiSortUp } from "react-icons/bi";
 import { ModalBackground, SubmitBtn } from "./Style";
@@ -48,7 +49,7 @@ export function FilterModal({
               id="date"
               type="radio"
               name="categoryFilter"
-              onClick={() => setFilterType("register")}
+              onChange={() => setFilterType("register")}
             />
             <FilterLabel htmlFor="date">서재등록 순으로 정렬</FilterLabel>
             <SortIcon>
@@ -60,7 +61,7 @@ export function FilterModal({
               id="subject"
               type="radio"
               name="categoryFilter"
-              onClick={() => setFilterType("title")}
+              onChange={() => setFilterType("title")}
             />
             <FilterLabel htmlFor="subject">제목 순으로 정렬</FilterLabel>
             <SortIcon>
@@ -72,7 +73,7 @@ export function FilterModal({
               id="day"
               type="radio"
               name="categoryFilter"
-              onClick={() => setFilterType("published")}
+              onChange={() => setFilterType("published")}
             />
             <FilterLabel htmlFor="day">발행 순으로 정렬</FilterLabel>
             <SortIcon>

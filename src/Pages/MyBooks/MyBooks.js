@@ -7,7 +7,6 @@ import { BookShelf } from "./Components/BookShelf";
 import { Modal } from "./Components/Modal";
 import { FilterModal } from "./Components/FilterModal";
 import {
-  API,
   TOKEN,
   LIBRARY,
   LIBRARY_MENU,
@@ -35,7 +34,7 @@ function MyBooks() {
 
   const getData = async () => {
     await axios
-      .get(`${API}/library`, {
+      .get(`${LIBRARY}`, {
         headers: {
           Authorization: TOKEN,
         },
@@ -48,7 +47,7 @@ function MyBooks() {
       });
 
     await axios
-      .get(`${API}/library/mybook`, {
+      .get(`${LIBRARY}/mybook`, {
         headers: {
           Authorization: TOKEN,
         },
@@ -62,7 +61,7 @@ function MyBooks() {
       });
 
     await axios
-      .get(`${API}/library/shelf`, {
+      .get(`${LIBRARY}/shelf`, {
         headers: {
           Authorization: TOKEN,
         },
@@ -77,7 +76,7 @@ function MyBooks() {
 
   const handleClickBookShelfList = async (id) => {
     await axios
-      .get(`${API}/library/shelfdetail?shelf_id=${id}`, {
+      .get(`${LIBRARY}/shelfdetail?shelf_id=${id}`, {
         headers: {
           Authorization: TOKEN,
         },
@@ -105,7 +104,7 @@ function MyBooks() {
 
   const handleClickBookShelfDelete = async (id) => {
     await axios
-      .delete(`${API}/library/shelf?shelf_id=${id}`, {
+      .delete(`${LIBRARY}/shelf?shelf_id=${id}`, {
         headers: {
           Authorization: TOKEN,
         },
@@ -132,7 +131,7 @@ function MyBooks() {
 
   const handleClickBookListSort = async () => {
     await axios
-      .get(`${API}/library/mybook?sort=${filterType}&read=${filterRead}`, {
+      .get(`${LIBRARY}/mybook?sort=${filterType}&read=${filterRead}`, {
         headers: {
           Authorization: TOKEN,
         },
