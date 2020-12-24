@@ -7,7 +7,13 @@ import { PostList } from "./Components/PostList";
 import { StatsList } from "./Components/StatsList";
 import { Modal } from "./Components/Modal";
 import { FilterModal } from "./Components/FilterModal";
-import { API, TOKEN, LIBRARY, DEFALT_MYBOOKS_BACKGROUND } from "../../config";
+import {
+  API,
+  TOKEN,
+  LIBRARY,
+  LIBRARY_MENU,
+  DEFALT_MYBOOKS_BACKGROUND,
+} from "../../config";
 import { commonContainer, theme, positionCenter } from "../../Styles/Theme";
 import { userProfileImg } from "./Components/Style";
 
@@ -189,7 +195,7 @@ function MyBooks() {
       </TopBanner>
       <MenuTab>
         <CardList>
-          {LIBRARY.map((item) => {
+          {LIBRARY_MENU.map((item) => {
             return (
               <LibraryMenu
                 key={item.id}
