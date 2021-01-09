@@ -1,5 +1,6 @@
+import { useState } from "react";
 import styled from "styled-components";
-import { BOOKLIST_SORT } from "../../../config";
+import { BOOKLIST_SORT_TYPE, BOOKLIST_SORT_READ } from "../../../config";
 import { GoSettings } from "react-icons/go";
 import { BiSortUp } from "react-icons/bi";
 import { ModalBackground, SubmitBtn } from "./Style";
@@ -7,10 +8,13 @@ import { ModalBackground, SubmitBtn } from "./Style";
 export function FilterModal({
   filterListOpen,
   setFilterListOpen,
-  setFilterRead,
-  setFilterType,
+  setSortRead,
+  setSortType,
   handleClickBookListSort,
 }) {
+  const [typeChecked, setTypeChecked] = useState({ selected: "register" });
+  const [readChecked, setReadChecked] = useState({ selected: "" });
+
   return (
     <Wrapper active={filterListOpen === true}>
       {filterListOpen && <ModalBackground />}
@@ -19,67 +23,43 @@ export function FilterModal({
           <GoSettings /> 필터
         </FilterTit>
         <ul>
-          <InputWrap>
-            <FilterInput
-              defaultChecked
-              id="all"
-              type="radio"
-              name="bookFilter"
-              onClick={() => setFilterRead("")}
-            />
-            <CheckIcon />
-            <FilterLabel htmlFor="all">전체 도서</FilterLabel>
-          </InputWrap>
-          <InputWrap>
-            <FilterInput
-              id="read"
-              type="radio"
-              name="bookFilter"
-              onClick={() => setFilterRead("read")}
-            />
-            <CheckIcon />
-            <FilterLabel htmlFor="read">읽은 도서</FilterLabel>
-          </InputWrap>
+          {BOOKLIST_SORT_READ.map((val) => (
+            <InputWrap>
+              <FilterInput
+                checked={readChecked.selected === val.type}
+                id={val.type}
+                type="radio"
+                name="bookFilter"
+                onChange={() => {
+                  setSortRead(val.type);
+                  setReadChecked({ selected: val.type });
+                }}
+              />
+              <CheckIcon />
+              <FilterLabel htmlFor={val.type}>{val.name}</FilterLabel>
+            </InputWrap>
+          ))}
         </ul>
         <Border />
         <ul>
-          <InputWrap>
-            <CategoryInput
-              defaultChecked
-              id="date"
-              type="radio"
-              name="categoryFilter"
-              onChange={() => setFilterType("register")}
-            />
-            <FilterLabel htmlFor="date">서재등록 순으로 정렬</FilterLabel>
-            <SortIcon>
-              <BiSortUp />
-            </SortIcon>
-          </InputWrap>
-          <InputWrap>
-            <CategoryInput
-              id="subject"
-              type="radio"
-              name="categoryFilter"
-              onChange={() => setFilterType("title")}
-            />
-            <FilterLabel htmlFor="subject">제목 순으로 정렬</FilterLabel>
-            <SortIcon>
-              <BiSortUp />
-            </SortIcon>
-          </InputWrap>
-          <InputWrap>
-            <CategoryInput
-              id="day"
-              type="radio"
-              name="categoryFilter"
-              onChange={() => setFilterType("published")}
-            />
-            <FilterLabel htmlFor="day">발행 순으로 정렬</FilterLabel>
-            <SortIcon>
-              <BiSortUp />
-            </SortIcon>
-          </InputWrap>
+          {BOOKLIST_SORT_TYPE.map((val) => (
+            <InputWrap key={val.type}>
+              <CategoryInput
+                checked={typeChecked.selected === val.type}
+                id={val.type}
+                type="radio"
+                name="typeSort"
+                onChange={() => {
+                  setSortType(val.type);
+                  setTypeChecked({ selected: val.type });
+                }}
+              />
+              <FilterLabel htmlFor={val.type}>{val.name}</FilterLabel>
+              <SortIcon>
+                <BiSortUp />
+              </SortIcon>
+            </InputWrap>
+          ))}
         </ul>
         <SubmitBtn
           onClick={() => {

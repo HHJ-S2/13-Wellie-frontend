@@ -25,8 +25,8 @@ function MyBooks() {
   const [bookShelfCase, setBookShelfCase] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [filterListOpen, setFilterListOpen] = useState(false);
-  const [filterRead, setFilterRead] = useState("");
-  const [filterType, setFilterType] = useState("register");
+  const [sortRead, setSortRead] = useState("");
+  const [sortType, setSortType] = useState("register");
 
   useEffect(() => {
     getData();
@@ -131,7 +131,7 @@ function MyBooks() {
 
   const handleClickBookListSort = async () => {
     await axios
-      .get(`${LIBRARY}/mybook?sort=${filterType}&read=${filterRead}`, {
+      .get(`${LIBRARY}/mybook?sort=${sortType}&read=${sortRead}`, {
         headers: {
           Authorization: TOKEN,
         },
@@ -171,8 +171,8 @@ function MyBooks() {
         filterListOpen={filterListOpen}
         setFilterListOpen={setFilterListOpen}
         handleClickBookListSort={handleClickBookListSort}
-        setFilterRead={setFilterRead}
-        setFilterType={setFilterType}
+        setSortRead={setSortRead}
+        setSortType={setSortType}
       />
       <TopBanner>
         <BgEditWrap>
