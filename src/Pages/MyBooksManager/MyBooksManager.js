@@ -4,13 +4,13 @@ import axios from "axios";
 import styled from "styled-components";
 import { TOKEN, LIBRARY } from "../../config";
 
-function MyBooksManager(props) {
+function MyBooksManager() {
   const history = useHistory();
   const [bookList, setBookList] = useState([]);
   const [bookShelfList, setBookShelfList] = useState([]);
   const [bookShelfInput, setbookShelfInput] = useState("");
   const [checkBookList, setCheckBookList] = useState([]);
-  const [saveItem, setSaverItem] = useState([]);
+  const [updateItems, setUpdateItems] = useState([]);
 
   useEffect(() => {
     stateCheck();
@@ -50,13 +50,37 @@ function MyBooksManager(props) {
     setbookShelfInput(value);
   };
 
-  const handleChangesingleCheck = (e, id) => {
+  const handleChangeSingleCheck = (e, id) => {
     const { checked } = e.target;
 
     if (checked) {
       setCheckBookList([...checkBookList, id]);
     } else {
       setCheckBookList(checkBookList.filter((el) => el !== id));
+    }
+  };
+
+  const handleChangeAllCheck = (e) => {
+    const { checked } = e.target;
+
+    if (!history.location.state) {
+      if (checked) {
+        const allArray = [];
+        bookList.books.forEach((item) => allArray.push(item.id));
+
+        setCheckBookList(allArray);
+      } else {
+        setCheckBookList([]);
+      }
+    } else {
+      if (checked) {
+        const allArray = [];
+        bookShelfList.forEach((item) => allArray.push(item.id));
+
+        setCheckBookList(allArray);
+      } else {
+        setCheckBookList([]);
+      }
     }
   };
 
@@ -89,9 +113,9 @@ function MyBooksManager(props) {
     }
   };
 
-  const handleClickBookShelfSave = () => {
+  const handleClickBookShelfUpdate = () => {
     for (let i = 0; i < bookShelfList.length; i++) {
-      saveItem.push(bookShelfList[i].id);
+      updateItems.push(bookShelfList[i].id);
     }
 
     if (!bookShelfInput) {
@@ -102,7 +126,7 @@ function MyBooksManager(props) {
           `${LIBRARY}/shelfdetail`,
           {
             shelf_id: history.location.state.id,
-            booklist: saveItem,
+            booklist: updateItems,
             shelfname: bookShelfInput,
           },
           {
@@ -127,30 +151,6 @@ function MyBooksManager(props) {
       (item) => checkBookList.indexOf(item.id) === -1
     );
     setBookShelfList(filterItem);
-  };
-
-  const handleChangeAllCheck = (e) => {
-    const { checked } = e.target;
-
-    if (!history.location.state) {
-      if (checked) {
-        const allArray = [];
-        bookList.books.forEach((item) => allArray.push(item.id));
-
-        setCheckBookList(allArray);
-      } else {
-        setCheckBookList([]);
-      }
-    } else {
-      if (checked) {
-        const allArray = [];
-        bookShelfList.forEach((item) => allArray.push(item.id));
-
-        setCheckBookList(allArray);
-      } else {
-        setCheckBookList([]);
-      }
-    }
   };
 
   return (
@@ -203,7 +203,7 @@ function MyBooksManager(props) {
                     type={"checkbox"}
                     checked={checkBookList.includes(item.id) ? true : false}
                     onChange={(e) => {
-                      handleChangesingleCheck(e, item.id);
+                      handleChangeSingleCheck(e, item.id);
                     }}
                   />
                   <SelectLabel htmlFor={item.id}></SelectLabel>
@@ -228,7 +228,7 @@ function MyBooksManager(props) {
                     type={"checkbox"}
                     checked={checkBookList.includes(item.id) ? true : false}
                     onChange={(e) => {
-                      handleChangesingleCheck(e, item.id);
+                      handleChangeSingleCheck(e, item.id);
                     }}
                   />
                   <SelectLabel htmlFor={item.id}></SelectLabel>
@@ -259,7 +259,7 @@ function MyBooksManager(props) {
               >
                 삭제
               </BookShelfAddBtn>
-              <BookShelfAddBtn onClick={() => handleClickBookShelfSave()}>
+              <BookShelfAddBtn onClick={() => handleClickBookShelfUpdate()}>
                 저장
               </BookShelfAddBtn>
             </BookShelfAddBtnWrap>
